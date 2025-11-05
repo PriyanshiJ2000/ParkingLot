@@ -1,4 +1,4 @@
-package com.example.ParkingLot.Service;
+package com.example.ParkingLot.Service.Strategy;
 
 import com.example.ParkingLot.Model.Ticket;
 

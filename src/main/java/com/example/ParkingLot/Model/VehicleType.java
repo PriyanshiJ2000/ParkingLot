@@ -1,9 +1,5 @@
 package com.example.ParkingLot.Model;
 
 public enum VehicleType {
-    Car,
-    Bus,
-    Truck,
-    Motorcycle,
-    Scooter
+    CAR, MOTORCYCLE, TRUCK, BUS, SCOOTER
 }

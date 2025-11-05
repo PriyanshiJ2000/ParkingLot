@@ -1,14 +1,15 @@
 package com.example.ParkingLot.Model;
 
 public class Vehicle {
-    private String licensePlate;
-    private VehicleType type;
-    private double hourlyRate;
+    private final String licensePlate;
+    private final VehicleType type;
 
-    public Vehicle(String licensePlate, VehicleType type, double hourlyRate) {
+    // Removed hourlyRate: the rate is determined by the
+    // FeeCalculationStrategy/Policy,
+    // not by the vehicle object.
+    public Vehicle(String licensePlate, VehicleType type) {
         this.licensePlate = licensePlate;
         this.type = type;
-        this.hourlyRate = hourlyRate;
     }
 
     public String getLicensePlate() {
@@ -17,9 +18,5 @@ public class Vehicle {
 
     public VehicleType getType() {
         return type;
-    }
-
-    public double getHourlyRate() {
-        return hourlyRate;
     }
 }

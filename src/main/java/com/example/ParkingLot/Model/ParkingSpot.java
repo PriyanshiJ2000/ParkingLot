@@ -6,11 +6,11 @@ public class ParkingSpot {
     private final int id;
     private final VehicleType type;
     private final Location location;
-    private final ParkingFloors floor;
+    private final ParkingFloor floor;
     private volatile Vehicle vehicle;
     private final ReentrantLock lock = new ReentrantLock(true);
 
-    public ParkingSpot(int id, VehicleType type, Location location, ParkingFloors floor, double hourlyRate) {
+    public ParkingSpot(int id, VehicleType type, Location location, ParkingFloor floor) {
         this.id = id;
         this.type = type;
         this.location = location;
@@ -33,7 +33,7 @@ public class ParkingSpot {
         return vehicle;
     }
 
-    public ParkingFloors getFloor() {
+    public ParkingFloor getFloor() {
         return floor;
     }
 
@@ -41,22 +41,18 @@ public class ParkingSpot {
         this.vehicle = vehicle;
     }
 
+    // Helper method (no lock needed here as it's a read-only check)
     public boolean isAvailable() {
-        lock.lock();
-        try {
-            if (vehicle == null)
-                return true;
-            return false;
-        } finally {
-            lock.unlock();
-        }
+        return this.vehicle == null;
     }
 
+    // Simplified: Check and park happens atomically under one lock acquisition
     public boolean park(Vehicle vehicle) {
         lock.lock();
         try {
-            if (this.isAvailable()) {
+            if (this.vehicle == null) {
                 this.vehicle = vehicle;
+                // Important: Update the floor's list of available spots
                 floor.removeAvailableSpot(type, this);
                 return true;
             }
@@ -69,8 +65,12 @@ public class ParkingSpot {
     public void vacate() {
         lock.lock();
         try {
-            this.vehicle = null;
-            floor.addAvailableSpot(type, this);
+            // Check if a vehicle is actually present before vacating
+            if (this.vehicle != null) {
+                this.vehicle = null;
+                // Important: Update the floor's list of available spots
+                floor.addAvailableSpot(type, this);
+            }
         } finally {
             lock.unlock();
         }

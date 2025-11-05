@@ -1,17 +1,20 @@
 package com.example.ParkingLot.Model;
 
+import java.util.Collections;
 import java.util.List;
 
 public class ParkingLot {
-    public final List<EntryGate> entryGates;
-    private final List<ParkingFloors> floors;
+    private final List<EntryGate> entryGates;
+    private final List<ParkingFloor> floors; // Changed to use the consolidated ParkingFloor class
 
-    public ParkingLot(List<ParkingFloors> floors, List<EntryGate> entryGates) {
-        this.floors = floors;
-        this.entryGates = entryGates;
+    public ParkingLot(List<ParkingFloor> floors, List<EntryGate> entryGates) {
+        // Use unmodifiable lists to ensure the parking lot structure is immutable after
+        // creation.
+        this.floors = Collections.unmodifiableList(floors);
+        this.entryGates = Collections.unmodifiableList(entryGates);
     }
 
-    public List<ParkingFloors> getFloors() {
+    public List<ParkingFloor> getFloors() {
         return floors;
     }
 
